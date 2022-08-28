@@ -58,13 +58,14 @@ const buildSetup = () => {
 const getRarityWeight = (_str) => {
     // console.log("rarity: ", _str)
 
-  let nameWithoutExtension = _str.slice(0, -4);
+  let nameWithoutExtension = _str//.slice(0, -4);
   var nameWithoutWeight = Number(
     nameWithoutExtension.split(rarityDelimiter).pop()
   );
   if (isNaN(nameWithoutWeight)) {
     nameWithoutWeight = 1;
   }
+  // console.log(nameWithoutExtension, nameWithoutWeight)
   return nameWithoutWeight;
 };
 
@@ -90,6 +91,7 @@ const getElements = (path) => {
     var innerContent = [];
     var weight = 0;
     // console.log("content: ", content);
+
     for (let i = 0; i < content.length; i++) {
         // attributes.push(fs.readdirSync(path + "/" + content[i]));
         innerContent = fs.readdirSync(path + "/" + content[i]);
@@ -99,16 +101,14 @@ const getElements = (path) => {
             // console.log('here  ', innerContent[j]);
 
             var name = cleanName(innerContent[j])
-            console.log("I: ", content[i])
-
-            // weight = 
+            weight = getRarityWeight(content[i])
             if (name[0] != "."){
               attributesTemp.push({
                   id: i + 1,
                   name: name,
                   filename: content[i],// + "/" + innerContent[j],
                   path: content[i] + "/" + innerContent[j],
-                  weight: 1//getRarityWeight(i),
+                  weight: weight//getRarityWeight(i),
                   // rarity: addRarity(innerContent[j]),
               });
             }
