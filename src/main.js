@@ -171,7 +171,7 @@ const drawBackground = () => {
 const addMetadata = (_dna, _edition) => {
   let dateTime = Date.now();
   let tempMetadata = {
-    name: `${namePrefix} #${_edition}`,
+    name: `${namePrefix}`,
     description: description,
     image: `${baseUri}/${_edition}.png`,
     dna: sha1(_dna),
@@ -179,7 +179,6 @@ const addMetadata = (_dna, _edition) => {
     date: dateTime,
     ...extraMetadata,
     attributes: attributesList,
-    compiler: "HashLips Art Engine",
   };
   if (network == NETWORK.sol) {
     tempMetadata = {
@@ -213,22 +212,21 @@ const addMetadata = (_dna, _edition) => {
 
 const addAttributes = (_element) => {
   let selectedElement = _element.layer.selectedElement;
-  // console.log("element: ",_element)
+  let layerName = _element.layer.name.split('#')[0]
   attributesList.push({
-    trait_type: _element.layer.name,
+    trait_type: layerName,
     value: selectedElement.filename,
   });
 };
 
 const loadLayerImg = async (_layer, folder, i) => {
-  
   try {
     return new Promise(async (resolve) => {
       // if (i>=_layer.selectedElement.length){
       //   i=_layer.selectedElement.length
       // }
-
-      const image = await loadImage(`/Users/alanlu/Desktop/elonwoofNFT/gif_stack/hashlips_art_engine_modified/layers/${folder}/${_layer.selectedElement[i].path}`);
+      // console.log("printed___", `layers/${folder}/${_layer.selectedElement[i].path}`)
+      const image = await loadImage(`layers/${folder}/${_layer.selectedElement[i].path}`);
       // console.log('here', _layer, i );
       _layer = JSON.parse(JSON.stringify(_layer));
       _layer.selectedElement = _layer.selectedElement[i]
@@ -339,16 +337,15 @@ const createDna = (_layers) => {
   _layers.forEach((layer) => {
     var totalWeight = 0;
     layer.elements.forEach((element) => {
-    //   console.log("here ",element, element[0].weight);
+      // console.log("here ",element, element[0].weight);
       totalWeight += element[0].weight;
     });
     // number between 0 - totalWeight
     let random = Math.floor(Math.random() * totalWeight);
-    // console.log(totalWeight)
+    
     for (var i = 0; i < layer.elements.length; i++) {
       // subtract the current weight from the random weight until we reach a sub zero value.
-      // console.log("element: ",random, layer.elements)
-      random -= layer.elements[i][0].weight;
+      random -= layer.elements[i][0].weight; 
       if (random < 0) {
         // console.log('NEGATIVE', layer.elements[i][0].id, layer.elements[i][0].filename, layer.bypassDNA)
         return randNum.push(
